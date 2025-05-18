@@ -1,11 +1,5 @@
 import { tweetsData } from "./data.js";
-
-const tweetBtn = document.getElementById("tweet-btn");
-const tweetInput = document.getElementById("tweet-input");
-
-tweetBtn.addEventListener("click", () => {
-  console.log(tweetInput.value);
-});
+import { v4 as uuidv4 } from "https://cdn.jsdelivr.net/npm/uuid@11.1.0/+esm";
 
 document.addEventListener("click", (e) => {
   if (e.target.dataset.like) {
@@ -18,6 +12,10 @@ document.addEventListener("click", (e) => {
 
   if (e.target.dataset.reply) {
     handleReplyClick(e.target.dataset.reply);
+  }
+
+  if (e.target.id === "tweet-btn") {
+    handleTweetBtnClick();
   }
 });
 
@@ -55,6 +53,28 @@ function handleRetweetClick(tweetId) {
 
 function handleReplyClick(replyId) {
   document.getElementById(`replies-${replyId}`).classList.toggle("hidden");
+}
+
+function handleTweetBtnClick() {
+  const tweetInput = document.getElementById("tweet-input");
+
+  if (tweetInput.value) {
+    tweetsData.unshift({
+      handle: "@Scrimba",
+      profilePic: "images/scrimbalogo.png",
+      likes: 0,
+      retweets: 0,
+      tweetText: tweetInput.value,
+      replies: [],
+      isLiked: false,
+      isRetweeted: false,
+      uuid: uuidv4(),
+    });
+
+    tweetInput.value = "";
+  }
+
+  renderFeed();
 }
 
 function getFeedHtml() {
